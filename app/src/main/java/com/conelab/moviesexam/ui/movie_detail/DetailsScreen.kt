@@ -16,13 +16,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.conelab.moviesexam.data.api.MoviesRepository
 import com.conelab.moviesexam.ui.common_composables.DetailsTopBar
+import com.conelab.moviesexam.ui.common_composables.ErrorDialog
 import com.conelab.moviesexam.ui.common_composables.MovieDetailsCard
-import com.conelab.moviesexam.ui.common_composables.TopBar
+import com.conelab.moviesexam.ui.common_composables.SquareButton
+import com.conelab.moviesexam.utils.Utils
 
 @Composable
 fun DetailsScreen(navController: NavController, viewModel: DetailsViewModel = viewModel())  {
@@ -32,56 +34,67 @@ fun DetailsScreen(navController: NavController, viewModel: DetailsViewModel = vi
     Log.d("DetailsScreen", "Movie ID: $movieIdString")
 
 
-    if (movieId == null) {
+    val showDialog =  !Utils.isNetworkAvailable(LocalContext.current)
+
+    if (showDialog) {
+        ErrorDialog()
         return
-    }
-    viewModel.fetchMovieDetails(movieId)
-    val movie = viewModel.movieDetails
-    val isLoading = viewModel.isLoading.collectAsState().value
+    }else{
+        val movie = viewModel.movieDetails
+        val isLoading = viewModel.isLoading.collectAsState().value
 
-    Log.d("DetailsScreen", "Movie Details: $movie")
+        Log.d("DetailsScreen", "Movie Details: $movie")
 
-    Scaffold(
+        Scaffold(
 
-        topBar = { DetailsTopBar(title = movie?.data?.title ?:  "Sin título ", onBackClick = { navController.popBackStack() }) }
+            topBar = { DetailsTopBar(title = movie?.data?.title ?:  "Elija un Idioma", onBackClick = { navController.popBackStack() }) }
 
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp)
-        ) {
-
-            if (isLoading) {
-                // Mostrar el indicador de carga mientras se esperan los detalles de la película
-                CircularProgressIndicator(modifier = Modifier.fillMaxSize())
-            } else {
-                // Mostrar los detalles de la película solo si no está cargando
-                movie?.let {
-                    MovieDetailsCard(movieDetails = it.data)
-                } ?: run {
-                    // Si no hay datos de la película, mostrar un mensaje o manejar el error
-                    Text(text = "No se pudieron cargar los detalles de la película.")
-                }
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp)
             ) {
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Español")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Português")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "English")
-                }
-            }
-        }
 
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
+                    SquareButton(text= "Español"){
+                        viewModel.fetchMovieDetails(movieId= movieId!!,language = "es")
+                    }
+                    SquareButton(text= "Português"){
+                        viewModel.fetchMovieDetails(movieId= movieId!!,language = "pt")
+                    }
+                    SquareButton(text= "English"){
+                        viewModel.fetchMovieDetails(movieId= movieId!!,language = "en")
+                    }
+
+
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.fillMaxSize(0.4f))
+                } else {
+                    movie?.let {
+                        MovieDetailsCard(movieDetails = it.data)
+                    } ?: run {
+                        Text(text = "")
+                    }
+                }
+
+
+            }
+
+        }
     }
+
+//    viewModel.fetchMovieDetails(movieId, "es")
+
 
 }

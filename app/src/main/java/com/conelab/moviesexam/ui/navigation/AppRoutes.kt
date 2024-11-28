@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import com.conelab.moviesexam.data.api.MovieApi
 import com.conelab.moviesexam.data.api.MoviesRepository
 import com.conelab.moviesexam.data.api.RetrofitMoviesClient
+import com.conelab.moviesexam.data.database.MovieDatabaseHelper
 import com.conelab.moviesexam.data.preferences.SPManager
 import com.conelab.moviesexam.ui.movie_detail.DetailsScreen
 import com.conelab.moviesexam.ui.movie_detail.DetailsViewModel
@@ -35,7 +36,7 @@ fun AppNavigation(navController: NavHostController, repository: MoviesRepository
             MoviesScreen(
                 navController = navController,
                 repository = repository,
-                spManager = spManager
+                spManager = spManager,
             )
         }
         composable(AppRoutes.DETAILS) { _ ->

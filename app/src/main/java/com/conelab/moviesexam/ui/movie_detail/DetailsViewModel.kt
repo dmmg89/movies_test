@@ -18,11 +18,12 @@ class DetailsViewModel(private val movieRepository: MoviesRepository) :ViewModel
     var error: String? = null
 
 
+
+
     var movieDetails : MoviesApiResult.SuccesDetails? = null
 
-    fun fetchMovieDetails(movieId: Int) {
 
-
+    fun fetchMovieDetails(movieId: Int, language: String) {
 
         error = null
 
@@ -32,7 +33,7 @@ class DetailsViewModel(private val movieRepository: MoviesRepository) :ViewModel
 
             try {
 
-                val response = movieRepository.fetchMovieDetails(movieId)
+                val response = movieRepository.fetchMovieDetails(movieId, language)
                 movieDetails = response as MoviesApiResult.SuccesDetails
                 _isLoading.value = false
             } catch (e: Exception) {

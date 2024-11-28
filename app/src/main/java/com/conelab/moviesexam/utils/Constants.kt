@@ -1,4 +1,4 @@
-package com.conelab.moviesexam
+package com.conelab.moviesexam.utils
 
 object Constants {
 
