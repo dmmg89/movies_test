@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.conelab.moviesexam.data.api.MoviesRepository
+import com.conelab.moviesexam.ui.common_composables.DetailsTopBar
 import com.conelab.moviesexam.ui.common_composables.MovieDetailsCard
 import com.conelab.moviesexam.ui.common_composables.TopBar
 
@@ -32,7 +33,6 @@ fun DetailsScreen(navController: NavController, viewModel: DetailsViewModel = vi
 
 
     if (movieId == null) {
-        Text(text = "Error, sin ID")
         return
     }
     viewModel.fetchMovieDetails(movieId)
@@ -43,7 +43,7 @@ fun DetailsScreen(navController: NavController, viewModel: DetailsViewModel = vi
 
     Scaffold(
 
-        topBar = { TopBar(title = movie?.data?.title ?:  "Sin título ", onBackClick = { navController.popBackStack() }) }
+        topBar = { DetailsTopBar(title = movie?.data?.title ?:  "Sin título ", onBackClick = { navController.popBackStack() }) }
 
     ) { padding ->
         Column(
@@ -71,13 +71,13 @@ fun DetailsScreen(navController: NavController, viewModel: DetailsViewModel = vi
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Idioma 1")
+                    Text(text = "Español")
                 }
                 Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Idioma 2")
+                    Text(text = "Português")
                 }
                 Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Idioma 3")
+                    Text(text = "English")
                 }
             }
         }

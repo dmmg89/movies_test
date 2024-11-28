@@ -1,5 +1,7 @@
 package com.conelab.moviesexam.ui.movie_list
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.conelab.moviesexam.Constants
@@ -10,7 +12,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class MoviesViewModel(private val moviesRepository: MoviesRepository) : ViewModel() {
+@RequiresApi(Build.VERSION_CODES.O)
+
+class MoviesViewModel(val moviesRepository: MoviesRepository) : ViewModel() {
+
 
     private val _movies = MutableStateFlow<List<MovieItem>>(emptyList())
     private val _dummyMovies = listOf(
@@ -26,7 +31,14 @@ class MoviesViewModel(private val moviesRepository: MoviesRepository) : ViewMode
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 
-    fun fetchMovies(page: Int = 1) {
+
+
+//    init {
+//        fetchMoviesFromApi()
+//    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun fetchMoviesFromApi(page: Int = 1) {
         _isLoading.value = true
         _errorMessage.value = null
 
@@ -48,6 +60,7 @@ class MoviesViewModel(private val moviesRepository: MoviesRepository) : ViewMode
                                 movie.gender_ids
                             )
                         }
+
                 }
 
                 is MoviesApiResult.Error -> {
@@ -60,9 +73,11 @@ class MoviesViewModel(private val moviesRepository: MoviesRepository) : ViewMode
         }
     }
 
-    init {
-        fetchMovies()
+
+    fun fetchMoviesFromDb(){
+        _movies.value = _dummyMovies
+
     }
 
-
 }
+

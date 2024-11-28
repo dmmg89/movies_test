@@ -8,7 +8,6 @@ class DetailsViewModelFactory(
     private val repository: MoviesRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        // Verifica que el ViewModel sea DetailsViewModel
         if (modelClass.isAssignableFrom(DetailsViewModel::class.java)) {
             return DetailsViewModel(repository) as T
         }
